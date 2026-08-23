@@ -1,0 +1,46 @@
+services:
+  php:
+    build: ./docker/php
+    container_name: php-webdev
+    volumes:
+      - ./app:/var/www/html
+    tty: true  
+    networks:
+      - webdev-net
+ 
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx-webdev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - webdev-net
+ 
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: webdev_db
+      POSTGRES_USER: yumna
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - webdev-net
+      
+ 
+networks:
+  webdev-net:
+    driver: bridge
+
+volumes:
+  postgres_data: 
+  db-data:
