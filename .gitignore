@@ -1,1 +1,9 @@
+# Docker & Data Logs
+/logs/
+/data/
+
+# Environment Files
 .env
+
+# SSL
+docker/nginx/ssl/
